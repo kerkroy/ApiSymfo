@@ -1,0 +1,15 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index#index:
+
+
+#############################
+#         CRUDRoute         #
+#############################
+crud:
+    path: /{entity}/{id?}
+    controller: Ui\Controller\CrudController::crud_user
+    methods: [ GET,PUT,POST,DELETE ]
+    requirements:
+        entity: '\w+'
+    stateless: true

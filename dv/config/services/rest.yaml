@@ -1,0 +1,42 @@
+parameters:
+    app.restaction.class: Application\RestORM\RestAction
+    app.actiondecorator.class: Application\RestORM\Action\ActionDecorator
+    app.restorm.class: Application\RestORM\RestORM
+    app.entityfactory.class: Application\RestORM\EntityFactory\EntityFactory
+
+services:
+    EntityFactory:
+        class: "%app.entityfactory.class%"
+
+    _instanceof:
+        Application\RestORM\Action\ActionInterface:
+            tags: ['Action']
+
+    RestAction:
+        class: "%app.restaction.class%"
+
+    Application\RestORM\RestFactory:
+        arguments: [ '@request_stack', '@RestAction' ]
+
+    ActionDecorator:
+        abstract: true
+        class: "%app.actiondecorator.class%"
+        arguments: [ '@RestORM' ]
+
+    RestORM:
+        class: "%app.restorm.class%"
+        calls:
+            - setEFRepositories: []
+        arguments: [ '@Doctrine\ORM\EntityManagerInterface', '@EntityFactory' ]
+
+    Application\RestORM\Action\POSTAction:
+        parent: ActionDecorator
+
+    Application\RestORM\Action\GETAction:
+        parent: ActionDecorator
+
+    Application\RestORM\Action\PUTAction:
+        parent: ActionDecorator
+
+    Application\RestORM\Action\DELETEAction:
+        parent: ActionDecorator
